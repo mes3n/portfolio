@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
+import { motion, useAnimationControls } from 'framer-motion'
+import { useMediaQuery } from 'react-responsive'
 
 const Home = () => {
+
   return (
     <>
       <Slide />
@@ -12,46 +14,86 @@ const Home = () => {
 }
 
 const Slide = () => {
-  const [mousePos, setMousePos] = useState<number>(40)
+
+  const isMobile = useMediaQuery({
+    query: '(max-width: 786px)'
+  })
+
+  const [keyWord, setKeyWord] = useState<string>('DEVELOP')
+  const [mousePos, setMousePos] = useState<number | null>(null)
 
   useEffect(() => {
-    const handleMouse = (event: TouchEvent | MouseEvent) => {
-      if (event instanceof MouseEvent) {
-        setMousePos(event.x / window.innerWidth * 100)
-      } else if (event instanceof TouchEvent) {
-        setMousePos(event.touches[0].clientX / window.innerWidth * 100)
+
+    if (isMobile) {
+      const mouseClickHandler = (event: MouseEvent | TouchEvent) => {
+        setKeyWord(keyWord === 'DEVELOP' ? 'IMPROVE' : 'DEVELOP')
+      }
+
+      window.addEventListener('mousedown', mouseClickHandler)
+      window.addEventListener('touchcancel', mouseClickHandler)
+
+      return () => {
+        window.removeEventListener('mousedown', mouseClickHandler)
+        window.removeEventListener('touchcancel', mouseClickHandler)
+      }
+    }
+    else {
+      const handleMouse = (event: TouchEvent | MouseEvent) => {
+        if (event instanceof MouseEvent) {
+          setMousePos(event.x / window.innerWidth * 100)
+        } else if (event instanceof TouchEvent) {
+          setMousePos(event.touches[0].clientX / window.innerWidth * 100)
+        }
+      }
+
+      window.addEventListener('mousemove', handleMouse)
+      window.addEventListener('touchmove', handleMouse)
+
+      return () => {
+        window.removeEventListener('mousemove', handleMouse)
+        window.removeEventListener('touchmove', handleMouse)
       }
     }
 
-    window.addEventListener('mousemove', handleMouse)
-    window.addEventListener('touchmove', handleMouse)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouse)
-      window.removeEventListener('touchmove', handleMouse)
-    }
   })
 
   return (
     <>
-      <Curtain
-        color='#03045e'>
-        <TextPage color='#eee'>
-          My name is Markus Svedenheim. <br />
-          I'm a young developer looking to <br />
-          <Fancy color='#90e0ef'>DEVELOP</Fancy> my skills!
-        </TextPage>
-      </Curtain>
-      <Curtain
-        animate={{ width: `${Math.max(mousePos, 40)}%` }}
-        transition={{ type: 'spring', duration: 0.1 }}
-        color='#caf0f8'>
-        <TextPage color='#222'>
-          My name is Markus Svedenheim. <br />
-          I'm a young developer looking to <br />
-          <Fancy color='#0077b6'>IMPROVE</Fancy> my skills!
-        </TextPage>
-      </Curtain>
+      {isMobile
+        ? <>
+          <Curtain
+            color='#caf0f8'>
+            <TextPage color='#222'>
+              My name is Markus Svedenheim.
+              I'm a young developer looking to
+              <Fancy color={keyWord === 'DEVELOP' ? '#8338EC' : '#FFBE0B'}>{keyWord}</Fancy> my skills!
+            </TextPage>
+          </Curtain>
+        </>
+        : <>
+          <Curtain
+            // initial={{ width: 0 }}
+            // animate={{ width: '100%', transition: { type: 'ease-in-out', duration: 0.5 }}}
+            color='#03045e'>
+            <TextPage color='#eee'>
+              My name is Markus Svedenheim. <br />
+              I'm a young developer looking to <br />
+              <Fancy color='#90e0ef'>DEVELOP</Fancy> my skills!
+            </TextPage>
+          </Curtain>
+          <Curtain
+            initial={{ width: '100%' }}
+            animate={{ width: `${Math.max(mousePos || 0, 40)}%` }}
+            transition={{ duration: mousePos ? 0.01 : 0.2 }}
+            // animate={{ width: '40%', transition: { type: 'just' } }}
+            color='#caf0f8'>
+            <TextPage color='#222'>
+              My name is Markus Svedenheim. <br />
+              I'm a young developer looking to <br />
+              <Fancy color='#0077b6'>IMPROVE</Fancy> my skills!
+            </TextPage>
+          </Curtain>
+        </>}
     </>
   )
 }
@@ -132,48 +174,104 @@ const Menu = () => {
 
   const rand = (min: number, max: number) => Math.floor(min + Math.random() * (max - min))
 
-  let [layout, setLayout] = useState<number>(0)
+  let [layout, setLayout] = useState<number>(rand(0, rects.length))
   let [pause, setPause] = useState<boolean>(false)
-  let [selected, setSelected] = useState<number | null>()
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (!pause) setLayout(rand(0, rects.length))
-    }, 2000)
+    }, 5000)
     return () => clearInterval(interval)
   }, [rects.length, pause])
 
   return (
     <MenuContainer>
       <MenuWrapper onMouseEnter={() => setPause(true)} onMouseLeave={() => setPause(false)}>
-        {rects[layout].map((r, i) =>
-          <MenuItem color={colors[i]}
-            animate={i === selected ? {
-              left: '0%',
-              top: '-20%',
-              width: '100%',
-              height: '135%',
-              zIndex: 2,
-              transition: {
-                type: 'ease-in-out',
-                duration: 0.75,
-                zIndex: {
-                  delay: 0,
-                },
-              },
-            } : {
-              left: `${r.left}%`,
-              top: `${r.top}%`,
-              height: `${r.height}%`,
-              width: `${r.width}%`,
-              zIndex: 1,
-            }}
-            transition={{ type: 'ease-in-out', duration: 0.75, zIndex: { delay: 0.75, duration: 0 } }}
-            onClick={() => setSelected(i === selected ? null : i)}
-          >
-          </MenuItem>)}
+        {rects[layout].map((rect, i) =>
+          <MenuItem
+            rect={rect}
+            color={colors[i]}
+          />
+        )}
       </MenuWrapper>
     </MenuContainer>
+  )
+}
+
+interface MI {
+  rect: {
+    left: number,
+    top: number,
+    height: number,
+    width: number
+  },
+  color: string,
+}
+
+const MenuItem: React.FC<MI> = ({ rect, color }) => {
+
+  // TOOD: Width, Height is updated slower which causes bad looking shifts on fast clicking
+
+  let controls = useAnimationControls()
+  let [selected, setSelected] = useState<boolean>(false)
+
+  const select = async () => {
+    setSelected(true)
+    controls.set({ zIndex: 2 })
+
+    controls.start({
+      left: '0%',
+      top: '0%',
+      width: '100%',
+      height: '100%',
+      transition: { type: 'spring', duration: 0.5 }
+    })
+  }
+  const dismiss = async () => {
+
+    await controls.start({
+      left: `${rect.left}%`,
+      top: `${rect.top}%`,
+      height: `${rect.height}%`,
+      width: `${rect.width}%`,
+      transition: { type: 'spring', duration: 0.5 }
+    })
+
+    controls.set({ zIndex: 1 })
+    setSelected(false)
+  }
+  const shake = async () => {
+    if (selected)
+      return
+    controls.start({ scale: 1.05, transition: { repeat: 1, repeatType: 'mirror', duration: 0.2 } })
+  }
+
+  useEffect(() => {
+    if (selected)
+      return
+    controls.start({
+      left: `${rect.left}%`,
+      top: `${rect.top}%`,
+      height: `${rect.height}%`,
+      width: `${rect.width}%`,
+      scale: 1,
+      transition: { type: 'ease-in-out', duration: 0.8 }
+    }).then(() => controls.set({ zIndex: 1 }))
+  }, [rect, controls, selected])
+
+  return (
+    <MenuItemWrapper
+      color={color}
+      initial={{
+        left: `${rect.left}%`,
+        top: `${rect.top}%`,
+        height: 0,
+        width: 0,
+      }}
+      animate={controls}
+      onClick={() => selected ? dismiss() : select()}
+      onHoverStart={() => shake()}
+    />
   )
 }
 
@@ -189,7 +287,7 @@ const Curtain = styled(motion.div)`
 `
 
 const TextPage = styled.div`
-  color: ${(props) => props.color};
+  color: ${props => props.color};
 
   margin-top: 20vh;
   margin-left: 55vw;
@@ -198,15 +296,30 @@ const TextPage = styled.div`
 
   font-family: 'Ubuntu', sans-serif;
   font-size: 48px;
+
+  @media screen and (max-width: 786px) {
+    font-size: 24px;
+    white-space: normal;
+
+    margin-left: auto;
+
+    width: 80%;
+    margin-top: 16vh;
+    margin-left: 10%;
+  }
 `
 
 const Fancy = styled.div`
-  color: ${(props) => props.color};
+  color: ${props => props.color};
   margin-left: 4px;
 
   font-family: 'Maven Pro', sans-serif;
 
   display: inline-block;
+
+  @media screen and (max-width: 786px) {
+    width: 110px;
+  }
 `
 
 const MenuContainer = styled.div`
@@ -216,26 +329,40 @@ const MenuContainer = styled.div`
   height: 100%;
 
   z-index: 1;
+
+  overflow: hidden;
+
+  @media screen and (max-width: 786px) {
+    width: 100%;
+    height: 64%;
+
+    bottom: 0;
+  }
 `
 
 const MenuWrapper = styled.div`
   position: relative;
 
-  /* aspect-ratio: 1.618; */
   width: 90%;
   height: 50%;
   margin: 0 auto;
-  top: 40%;
+  top: 45%;
 
-  /* margin-top: 50%; */
+  @media screen and (max-width: 786px) {
+    height: 80%;
+    top: 15%;
+  }
+
 `
 
-const MenuItem = styled(motion.div)`
+const MenuItemWrapper = styled(motion.div) <{ color: string }>`
 
   position: absolute;
 
-  background-color: ${(props) => props.color || '#000'};
+  background-color: ${(props) => props.color};
   border-radius: 16px;
+
+  scale: 1;
 
   /* overflow: hidden; */
 `
