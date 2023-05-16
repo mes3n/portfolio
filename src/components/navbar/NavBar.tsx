@@ -29,7 +29,7 @@ const Nav = () => {
   useEffect(() => {
     active !== window.location.pathname.replaceAll('/', '') &&
       setActive(window.location.pathname.replaceAll('/', ''))
-  }, [window.location.pathname])
+  })
 
   const links = [
     { link: '', name: 'Home' },

@@ -23,7 +23,6 @@ const Slide = () => {
   const [mousePos, setMousePos] = useState<number | null>(null)
 
   useEffect(() => {
-
     if (isMobile) {
       const mouseClickHandler = (event: MouseEvent | TouchEvent) => {
         setKeyWord(keyWord === 'DEVELOP' ? 'IMPROVE' : 'DEVELOP')
@@ -54,7 +53,6 @@ const Slide = () => {
         window.removeEventListener('touchmove', handleMouse)
       }
     }
-
   })
 
   return (
@@ -72,8 +70,6 @@ const Slide = () => {
         </>
         : <>
           <Curtain
-            // initial={{ width: 0 }}
-            // animate={{ width: '100%', transition: { type: 'ease-in-out', duration: 0.5 }}}
             color='#03045e'>
             <TextPage color='#eee'>
               My name is Markus Svedenheim. <br />
@@ -83,9 +79,8 @@ const Slide = () => {
           </Curtain>
           <Curtain
             initial={{ width: '100%' }}
-            animate={{ width: `${Math.max(mousePos || 0, 40)}%` }}
-            transition={{ duration: mousePos ? 0.01 : 0.2 }}
-            // animate={{ width: '40%', transition: { type: 'just' } }}
+            animate={{ width: `${Math.max(mousePos || 0, 40)}%`}}
+            transition={{ duration: mousePos ? 0.01 : 0.8 }}
             color='#caf0f8'>
             <TextPage color='#222'>
               My name is Markus Svedenheim. <br />
@@ -216,28 +211,26 @@ const MenuItem: React.FC<MI> = ({ rect, color }) => {
   let [selected, setSelected] = useState<boolean>(false)
 
   const select = async () => {
-    setSelected(true)
     controls.set({ zIndex: 2 })
-
-    controls.start({
+    await controls.start({
       left: '0%',
       top: '0%',
       width: '100%',
       height: '100%',
       transition: { type: 'spring', duration: 0.5 }
     })
+
+    setSelected(true)
   }
   const dismiss = async () => {
-
     await controls.start({
       left: `${rect.left}%`,
       top: `${rect.top}%`,
       height: `${rect.height}%`,
       width: `${rect.width}%`,
       transition: { type: 'spring', duration: 0.5 }
-    })
+    }).then(() => controls.set({ zIndex: 1 }))
 
-    controls.set({ zIndex: 1 })
     setSelected(false)
   }
   const shake = async () => {
@@ -255,19 +248,14 @@ const MenuItem: React.FC<MI> = ({ rect, color }) => {
       height: `${rect.height}%`,
       width: `${rect.width}%`,
       scale: 1,
-      transition: { type: 'ease-in-out', duration: 0.8 }
+      transition: { duration: 0.8 }
     }).then(() => controls.set({ zIndex: 1 }))
   }, [rect, controls, selected])
 
   return (
     <MenuItemWrapper
       color={color}
-      initial={{
-        left: `${rect.left}%`,
-        top: `${rect.top}%`,
-        height: 0,
-        width: 0,
-      }}
+      transition={{duration: 0.2}}
       animate={controls}
       onClick={() => selected ? dismiss() : select()}
       onHoverStart={() => shake()}
@@ -276,12 +264,15 @@ const MenuItem: React.FC<MI> = ({ rect, color }) => {
 }
 
 const Curtain = styled(motion.div)`
-  background: ${(props) => props.color};
+  position: absolute;
+
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
 
+  background: ${props => props.color};
   overflow: hidden;
-  position: absolute;
 
   z-index: 1;
 `
@@ -343,26 +334,28 @@ const MenuContainer = styled.div`
 const MenuWrapper = styled.div`
   position: relative;
 
+  top: 45%;
   width: 90%;
   height: 50%;
   margin: 0 auto;
-  top: 45%;
 
   @media screen and (max-width: 786px) {
-    height: 80%;
     top: 15%;
+    height: 80%;
   }
-
 `
 
-const MenuItemWrapper = styled(motion.div) <{ color: string }>`
+const MenuItemWrapper = styled(motion.div)`
 
   position: absolute;
 
-  background-color: ${(props) => props.color};
+  background-color: ${props => props.color};
   border-radius: 16px;
 
-  scale: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 
   /* overflow: hidden; */
 `
