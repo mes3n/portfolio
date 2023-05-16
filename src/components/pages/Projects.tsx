@@ -1,7 +1,7 @@
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
 
 import { Container, Title, Text, Margin } from '../common/Common'
-
 
 interface ProjectType {
   name: string,
@@ -83,6 +83,14 @@ const Projects = () => {
     },
   ]
 
+  const container = {
+    show: {
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  }
+
   return (
     <Container>
       <Margin height={32} />
@@ -90,46 +98,56 @@ const Projects = () => {
       <Margin height={16} />
       <Text>A showcase of some of the more fun projects I have done, or am working on!</Text>
       <Margin height={64} />
-      {projects.map(project =>
-        <ProjectCard
-          {...project}>
-        </ProjectCard>)}
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      >
+        {projects.map(project =>
+          <ProjectCard
+            {...project} />)}
+      </motion.div>
     </Container>
   )
 }
 
 const ProjectCard: React.FC<ProjectType> = ({ name, date, description, languages, links, image, opacity }) => {
 
+  const item = {
+    hidden: { left: '-100%', opacity: 0 },
+    show: { left: 'unset', opacity: 1 }
+  }
+
   return (
-    <>
-      <Card>
-        {image && <CardImage src={image} opacity={opacity} />}
-        <CardInfo>
-          <CardTitle>{name}</CardTitle>
-          <CardDate>{new Date(date).toLocaleDateString('sv-SE')}</CardDate>
-          <Margin height={16} />
-          <CardDescription>{description}</CardDescription>
-        </CardInfo>
-        <CardInfo>
-          <CardLangs>{languages?.map((lang, i) => lang + (i === languages.length - 1 ? '' : ', '))}</CardLangs>
-          <CardLinks>
-            {links?.map(link => link.link.includes('https')
-              ? <CardLink href={link.link} target='_blank'>
-                {link.name}
-              </CardLink>
-              : <CardLink onClick={() => window.open(link.link)} target='_blank'>
-                {link.name}
-              </CardLink>)}
-          </CardLinks>
-        </CardInfo>
-      </Card>
-      <Margin height={32} />
-    </>
+    <Card
+      variants={item}
+      transition={{ duration: 0.4 }}
+      >
+      {image && <CardImage src={image} opacity={opacity} />}
+      <CardInfo>
+        <CardTitle>{name}</CardTitle>
+        <CardDate>{new Date(date).toLocaleDateString('sv-SE')}</CardDate>
+        <Margin height={16} />
+        <CardDescription>{description}</CardDescription>
+      </CardInfo>
+      <CardInfo>
+        <CardLangs>{languages?.map((lang, i) => lang + (i === languages.length - 1 ? '' : ', '))}</CardLangs>
+        <CardLinks>
+          {links?.map(link => link.link.includes('https')
+            ? <CardLink href={link.link} target='_blank'>
+              {link.name}
+            </CardLink>
+            : <CardLink onClick={() => window.open(link.link)} target='_blank' style={{ textDecoration: 'underline' }}>
+              {link.name}
+            </CardLink>)}
+        </CardLinks>
+      </CardInfo>
+    </Card>
   )
 }
 
-const Card = styled.div`
-
+const Card = styled(motion.div)`
   position: relative;
 
   @media screen and (min-width: 786px) {
@@ -146,10 +164,12 @@ const Card = styled.div`
 
   width: min(90%, 1080px);
   border-radius: 16px;
+
+  margin-bottom: 32px;
 `
 
 const CardInfo = styled.div`
-z-index: 1;
+  position: relative;
   margin: 16px;
 `
 
@@ -158,6 +178,10 @@ const CardLinks = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 16px;
+
+  @media screen and (max-width: 786px) {
+    gap: 4px;
+  }
 `
 
 const CardTitle = styled.div`
@@ -211,7 +235,6 @@ const CardLink = styled.a`
 `
 
 const CardImage = styled.div<{ src: string, opacity?: number }>`
-
   position: absolute;
   
   background-image: url(${props => props.src});
