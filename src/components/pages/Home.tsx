@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { motion, useAnimationControls } from 'framer-motion'
+import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { useMediaQuery } from 'react-responsive'
 
 const Home = () => {
@@ -24,7 +24,7 @@ const Slide = () => {
 
   useEffect(() => {
     if (isMobile) {
-      const mouseClickHandler = (event: MouseEvent | TouchEvent) => {
+      const mouseClickHandler = (_: MouseEvent | TouchEvent) => {
         setKeyWord(keyWord === 'DEVELOP' ? 'IMPROVE' : 'DEVELOP')
       }
 
@@ -77,17 +77,19 @@ const Slide = () => {
               <Fancy color='#90e0ef'>DEVELOP</Fancy> my skills!
             </TextPage>
           </Curtain>
-          <Curtain
-            initial={{ width: '100%' }}
-            animate={{ width: `${Math.max(mousePos || 0, 40)}%`}}
-            transition={{ duration: mousePos ? 0.01 : 0.8 }}
-            color='#caf0f8'>
-            <TextPage color='#222'>
-              My name is Markus Svedenheim. <br />
-              I'm a young developer looking to <br />
-              <Fancy color='#0077b6'>IMPROVE</Fancy> my skills!
-            </TextPage>
-          </Curtain>
+          <AnimatePresence>
+            <Curtain
+              initial={{ width: '100%' }}
+              animate={{ width: `${Math.max(mousePos || 0, 40)}%` }}
+              transition={{ duration: mousePos ? 0.01 : 0.8 }}
+              color='#caf0f8'>
+              <TextPage color='#222'>
+                My name is Markus Svedenheim. <br />
+                I'm a young developer looking to <br />
+                <Fancy color='#0077b6'>IMPROVE</Fancy> my skills!
+              </TextPage>
+            </Curtain>
+          </AnimatePresence>
         </>}
     </>
   )
@@ -255,7 +257,7 @@ const MenuItem: React.FC<MI> = ({ rect, color }) => {
   return (
     <MenuItemWrapper
       color={color}
-      transition={{duration: 0.2}}
+      transition={{ duration: 0.2 }}
       animate={controls}
       onClick={() => selected ? dismiss() : select()}
       onHoverStart={() => shake()}

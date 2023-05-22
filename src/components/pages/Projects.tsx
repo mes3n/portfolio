@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
-import { Container, Title, Text, Margin } from '../common/Common'
+import { Container, Title, Header, Margin } from '../common/Common'
 
 interface ProjectType {
   name: string,
@@ -83,7 +83,7 @@ const Projects = () => {
     },
   ]
 
-  const container = {
+  const list = {
     show: {
       transition: {
         staggerChildren: 0.2
@@ -96,18 +96,20 @@ const Projects = () => {
       <Margin height={32} />
       <Title>Projects</Title>
       <Margin height={16} />
-      <Text>A showcase of some of the more fun projects I have done, or am working on!</Text>
+      <Header>A showcase of some of the more fun projects I have done, or am working on!</Header>
       <Margin height={64} />
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      >
-        {projects.map(project =>
-          <ProjectCard
-            {...project} />)}
-      </motion.div>
+      <AnimatePresence>
+        <motion.div
+          variants={list}
+          initial='hidden'
+          animate='show'
+          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+        >
+          {projects.map(project =>
+            <ProjectCard
+              {...project} />)}
+        </motion.div>
+      </AnimatePresence>
     </Container>
   )
 }
@@ -122,8 +124,7 @@ const ProjectCard: React.FC<ProjectType> = ({ name, date, description, languages
   return (
     <Card
       variants={item}
-      transition={{ duration: 0.4 }}
-      >
+      transition={{ duration: 0.4 }}>
       {image && <CardImage src={image} opacity={opacity} />}
       <CardInfo>
         <CardTitle>{name}</CardTitle>

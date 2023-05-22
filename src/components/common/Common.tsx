@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import styled from 'styled-components'
 
 export const pageTransitions = {
@@ -44,9 +43,16 @@ export const Title = styled.div`
   font-size: 64px;
 `
 
-export const Text = styled.div`
+export const Header = styled.div`
   font-family: 'Ubuntu', sans-serif;
   font-size: 24px;
+
+  text-align: center;
+`
+
+export const Text = styled.div`
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 20px;
 
   text-align: center;
 `
