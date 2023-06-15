@@ -33,9 +33,9 @@ const Projects = () => {
       opacity: 0.05,
     },
     {
-      name: 'LSSPRO',
+      name: 'LSSPro',
       date: Date.now(),
-      description: 'Local Small Scale PROtein Folding engine. See image for result...',
+      description: 'Local Small Scale Protein folding engine. See image for result...',
       languages: ['Python'],
       links: [{ link: 'https://www.github.com/mes3n/protein-folding', name: 'source' }, { link: 'protein_folding.pdf', name: 'research' }],
       image: 'protein.svg',
@@ -174,7 +174,7 @@ const CardInfo = styled.div`
   margin: 16px;
 `
 
-const CardLinks = styled.div`
+const CardLinks = styled.li`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -185,7 +185,7 @@ const CardLinks = styled.div`
   }
 `
 
-const CardTitle = styled.div`
+const CardTitle = styled.h1`
   font-family: 'Sora', sans-serif;
   font-size: 36px;
 
@@ -194,7 +194,7 @@ const CardTitle = styled.div`
   }
 `
 
-const CardDate = styled.div`
+const CardDate = styled.p`
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
 
@@ -203,12 +203,13 @@ const CardDate = styled.div`
   }
 `
 
-const CardDescription = styled.div`
+const CardDescription = styled.p`
   font-family: 'Ubuntu', sans-serif;
   font-size: 20px;
 
   @media screen and (max-width: 786px) {
     font-size: 14px;
+    font-weight: 300;
   }
 `
 
@@ -243,8 +244,6 @@ const CardImage = styled.div<{ src: string, opacity?: number }>`
   background-size: cover;
 
   opacity: ${props => props.opacity || 0.2};
-
-  /* border-radius: 50%; */
 
   top: 0;
   left: 0;
