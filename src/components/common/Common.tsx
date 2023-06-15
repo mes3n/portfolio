@@ -29,28 +29,33 @@ export const RootContainer = styled.div`
 `
 
 export const Container = styled.div`
-
   display: flex;
   flex-direction: column;
 
   align-items: center;
 
-  margin-top: 64px;  
+  min-height: 100%;
+  padding-top: 64px;  
+  box-sizing: border-box;
+
+  overflow-x: hidden;
 `
 
-export const Title = styled.div`
+export const Title = styled.h1`
   font-family: 'Sora', sans-serif;
   font-size: 64px;
 `
 
-export const Header = styled.div`
+export const Header = styled.h2`
   font-family: 'Ubuntu', sans-serif;
   font-size: 24px;
+
+  font-weight: 500;
 
   text-align: center;
 `
 
-export const Text = styled.div`
+export const Text = styled.p`
   font-family: 'Ubuntu', sans-serif;
   font-size: 20px;
 
@@ -58,6 +63,6 @@ export const Text = styled.div`
 `
 
 export const Margin = styled.div<{width?: number, height?: number}>`
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
+  width: ${props => props.width}px;
+  height: ${props => props.height}px;
 `
