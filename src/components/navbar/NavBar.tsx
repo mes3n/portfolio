@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive'
 
@@ -23,12 +23,27 @@ const Nav = () => {
   })
 
   const navigate = useNavigate()
+  const ref = useRef<HTMLDivElement>(null)
+
   let [active, setActive] = useState<string>(window.location.pathname.replaceAll('/', ''))
   let [expand, setExpand] = useState<boolean>(false)
 
   useEffect(() => {
     active !== window.location.pathname.replaceAll('/', '') &&
       setActive(window.location.pathname.replaceAll('/', ''))
+  })
+
+  useEffect(() => {
+    const onClick = ({target}: MouseEvent | TouchEvent) => {
+      if (!ref.current?.contains(target as Node)) {
+        setExpand(false)
+      }
+    }
+
+    window.addEventListener('click', onClick)
+    return () => {
+      window.removeEventListener('click', onClick)
+    }
   })
 
   const links = [
@@ -39,13 +54,13 @@ const Nav = () => {
   ]
 
   return (
-    <NavContainer>
+    <NavContainer ref={ref}>
       {isMobile
         ? <>
           <HamburgerMenu
             initial={{ transform: 'translate(150%, -70%)' }}
             animate={{ transform: expand ? 'translate(50%, -30%)' : 'translate(150%, -70%)' }}>
-            {links.map((link) => <NavLink onClick={() => {
+            {links.map(link => <NavLink onClick={() => {
               navigate(link.link)
               setActive(link.link)
             }} active={active === link.link}>{link.name}</NavLink>)}
