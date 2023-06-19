@@ -43,7 +43,7 @@ const Projects = () => {
     {
       name: 'Skidslip',
       date: Date.now(),
-      description: 'Website for a personal business specialising in tuning skis.',
+      description: 'Website for a personal business specializing in tuning skis.',
       languages: ['React', 'Typescript'],
       links: [{ link: 'https://www.github.com/mes3n/skidslip', name: 'source' }, { link: 'https://skidslip.svedenheim.se', name: 'skidslip' }],
     },

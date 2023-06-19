@@ -256,7 +256,7 @@ const Menu = () => {
           <MenuItemTitle>A slice of my work</MenuItemTitle>
           <MenuItemText>
             My achievements in programming are molded by exploring <MIH>new ideas</MIH>! 
-            Everthing between backend, frontend and game development. 
+            Everything between backend, frontend and game development. 
             As well as a dash of <MIH>computational molecular biology</MIH>.
           </MenuItemText>
           <Button text={'Projects'} icon={'➔'} callback={() => navigate('/projects')} />
@@ -298,14 +298,14 @@ const Menu = () => {
           <MenuItemTitle>What have I done?</MenuItemTitle>
           <MenuItemText>
             During my journey into the world of programming,
-            I have explored multiple <MIH>languages</MIH>, <MIH>libraries</MIH>, and <MIH>possibilites!</MIH>
+            I have explored multiple <MIH>languages</MIH>, <MIH>libraries</MIH>, and <MIH>possibilities!</MIH>
           </MenuItemText>
           <Button text={'Read More'} icon={'➔'} callback={() => navigate('/about')} />
         </motion.div>
       ),
     },
     {
-      // Wildcard is in developmen, final result is hopefully an actual widlcard randomly picking a fact
+      // Wildcard is in development, final result is hopefully an actual wildcard randomly picking a fact
       'name': 'Wildcard',
       'color': '#8338ec',
       'content': (
@@ -409,7 +409,7 @@ interface MI {
 
 const MenuItem: React.FC<MI> = ({ rect, name, color, children }) => {
 
-  // TOOD: Width, Height is updated slower which causes bad looking shifts on fast clicking
+  // TODO: Width, Height is updated slower which causes bad looking shifts on fast clicking
   // Maybe, idk tbh :/
 
   let controls = useAnimationControls()
