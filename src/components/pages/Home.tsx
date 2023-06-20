@@ -58,7 +58,10 @@ const Slide = () => {
     }
   })
 
-  return (
+  return (  // change to less introspective note 
+            // My name is Markus Svedenheim.
+            // I'm a young developer looking to contribute to
+            // I'm a young developer looking to explore software development 
     <>
       {isMobile
         ? <>
