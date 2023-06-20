@@ -8,14 +8,16 @@ const Contact = () => {
     <Container>
       <Margin height={32} />
       <Title>Contact</Title>
-      <Margin height={16} />
+      <Margin height={32} />
       <Card>
         <CardTitle>Gmail</CardTitle>
-        <CardText>markus@svedenheim.se</CardText>
+        <CardLink href='mailto:markus@svedenheim.se' target='_blank'>markus@svedenheim.se</CardLink>
         <CardTitle>Telephone</CardTitle>
-        <CardText>+46 76 070 40 29</CardText>
+        <CardLink href='tel:+46760704029' target='_blank'>+46 76 070 40 29</CardLink>
         <CardTitle>GitHub</CardTitle>
-        <CardText>mes3n</CardText>
+        <CardLink href='https://github.com/mes3n' target='_blank'>mes3n</CardLink>
+        <CardTitle>Resume</CardTitle>
+        <CardLink onClick={() => window.open('resume.pdf')} target='_blank' style={{ textDecoration: 'underline' }}>open</CardLink>
       </Card>
     </Container>
   )
@@ -54,9 +56,12 @@ const CardTitle = styled.h1`
   }
 `
 
-const CardText = styled.p`
+const CardLink = styled.a`
   font-family: 'Ubuntu', sans-serif;
   font-size: 20px;
+
+  color: inherit;
+  cursor: pointer;
 
   @media screen and (max-width: 786px) {
     font-size: 14px;

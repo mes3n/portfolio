@@ -87,7 +87,7 @@ const Timeline = () => {
 
   useEffect(() => {
     const handleMouseScroll = (event: WheelEvent) => {
-      setScrollX(clip(0, scrollX + event.deltaX * 0.2, maxWidth))
+      setScrollX(clip(0, scrollX + event.deltaY * 0.2, maxWidth))
     }
 
     const handleTouchMove = (event: TouchEvent) => {
