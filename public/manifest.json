@@ -1,15 +1,11 @@
 {
   "short_name": "Markus Svedenheim",
-  "name": "Markus Svedenheim | Young Software Engineer",
+  "name": "Markus Svedenheim | Software Engineer",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "letter-m.svg",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/svg"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  ]
 }
