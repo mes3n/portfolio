@@ -144,7 +144,7 @@ const Fancy = styled.span`
   color: ${props => props.color};
   margin-left: 4px;
 
-  font-family: 'Maven Pro', sans-serif;
+  font-family: 'Source Code Pro', monospace;
 
   @media screen and (max-width: 786px) {
     width: 110px;

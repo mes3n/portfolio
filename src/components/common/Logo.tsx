@@ -25,7 +25,7 @@ const Container = styled.div`
 `
 
 const Title = styled.div`
-  font-family: 'Maven Pro', sans-serif;
+  font-family: 'Source Code Pro', monospace;
   font-size: 48px;
 
   @media screen and (max-width: 786px) {
