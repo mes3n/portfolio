@@ -31,7 +31,7 @@ const Nav = () => {
   useEffect(() => {
     active !== window.location.pathname.replaceAll('/', '') &&
       setActive(window.location.pathname.replaceAll('/', ''))
-  })
+  }, [active])
 
   useEffect(() => {
     const onClick = ({target}: MouseEvent | TouchEvent) => {

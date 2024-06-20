@@ -22,13 +22,13 @@ const Slide = () => {
     query: '(max-width: 786px)'
   })
 
-  const [keyWord, setKeyWord] = useState<string>('DEVELOP')
+  const [keyword, setKeyword] = useState<string>('DEVELOP')
   const [mousePos, setMousePos] = useState<number | null>(null)
 
   useEffect(() => {
     if (isMobile) {
       const mouseClickHandler = (_: MouseEvent | TouchEvent) => {
-        setKeyWord(keyWord === 'DEVELOP' ? 'IMPROVE' : 'DEVELOP')
+        setKeyword(keyword === 'DEVELOP' ? 'UTILIZE' : 'DEVELOP')
       }
 
       window.addEventListener('mousedown', mouseClickHandler)
@@ -57,11 +57,11 @@ const Slide = () => {
       }
     }
   })
-
-  return (  // change to less introspective note 
-            // My name is Markus Svedenheim.
-            // I'm a young developer looking to contribute to
-            // I'm a young developer looking to explore software development 
+  // change to less introspective note
+  // My name is Markus Svedenheim.
+  // I'm a young developer looking to contribute to
+  // I'm a young developer looking to explore software development
+  return (
     <>
       {isMobile
         ? <>
@@ -70,7 +70,7 @@ const Slide = () => {
             <TextPage color='#222'>
               My name is Markus Svedenheim.
               I'm a young developer looking to
-              <Fancy color={keyWord === 'DEVELOP' ? '#8338EC' : '#FFBE0B'}>{keyWord}</Fancy> my skills!
+              <Fancy color={keyword === 'DEVELOP' ? '#8338EC' : '#FFBE0B'}>{keyword}</Fancy> my skills!
             </TextPage>
           </Curtain>
         </>
@@ -92,7 +92,7 @@ const Slide = () => {
               <TextPage color='#222'>
                 My name is Markus Svedenheim. <br />
                 I'm a young developer looking to <br />
-                <Fancy color='#0077b6'>IMPROVE</Fancy> my skills!
+                <Fancy color='#0077b6'>UTILIZE</Fancy> my skills!
               </TextPage>
             </Curtain>
           </AnimatePresence>
@@ -258,8 +258,8 @@ const Menu = () => {
           transition={{ duration: 0.2 }}>
           <MenuItemTitle>A slice of my work</MenuItemTitle>
           <MenuItemText>
-            My achievements in programming are molded by exploring <MIH>new ideas</MIH>! 
-            Everything between backend, frontend and game development. 
+            My achievements in programming are molded by exploring <MIH>new ideas</MIH>!
+            Everything between backend, frontend and game development.
             As well as a dash of <MIH>computational molecular biology</MIH>.
           </MenuItemText>
           <Button text={'Projects'} icon={'➔'} callback={() => navigate('/projects')} />
@@ -319,8 +319,8 @@ const Menu = () => {
           transition={{ duration: 0.2 }}>
           <MenuItemTitle>LSSPro</MenuItemTitle>
           <MenuItemText>
-            This has to be the most interesting project I have done: 
-            A computation molecular dynamics simulation aimed at simulating 
+            This has to be the most interesting project I have done:
+            A computation molecular dynamics simulation aimed at simulating
             the folding process of an arbitrary protein from its amino acid sequence.
           </MenuItemText>
           <MenuItemText><MIH>Local Small Scale Protein folding engine</MIH></MenuItemText>
@@ -368,7 +368,7 @@ const Menu = () => {
 
 const MenuContainer = styled.div`
   position: absolute;
-  
+
   width: 40%;
   height: 100%;
 
@@ -472,7 +472,7 @@ const MenuItem: React.FC<MI> = ({ rect, name, color, children }) => {
       transition: { duration: 0.8 }
     }).then(() => controls.set({ zIndex: 1 }))
 
-  }, [rect, controls, selected])
+  }, [rect, controls, selected, animating])
 
   return (
     <MenuItemWrapper
@@ -516,7 +516,7 @@ const MenuItemName = styled(motion.h1)`
   text-transform: uppercase;
 
   overflow-wrap: break-word;
-  
+
   text-shadow: 0 0 8px black, 0 0 1px black;
 
   user-select: none;
@@ -524,7 +524,7 @@ const MenuItemName = styled(motion.h1)`
   @media screen and (max-width: 786px) {
     font-size: 32px;
   }
-  
+
 `
 
 
