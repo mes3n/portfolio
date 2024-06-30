@@ -10,6 +10,6 @@ export const palette = {
     '#499dbd',
   ],
   gradient: {
-    dark: '#8884, #2226, #0008',
+    dark: '#8888, #222a, #000c',
   },
 }

@@ -206,7 +206,7 @@ const NavLink = styled.div<{ active: boolean, hover?: boolean }>`
   @media screen and (min-width: 786px) {
     ${props => props.active
     ? css`
-      background: linear-gradient(145deg, ${palette.gradient.dark});
+      background: linear-gradient(145deg, ${palette.gray}, ${palette.dark});
       text-shadow: 2px 2px black;
       translate: -1px -1px;
     `
