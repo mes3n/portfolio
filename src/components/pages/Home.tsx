@@ -5,6 +5,7 @@ import { useMediaQuery } from 'react-responsive'
 import { useNavigate } from 'react-router-dom'
 
 import Button from '../common/Button'
+import { RootContainer } from '../common/Common'
 
 const Home = () => {
 
@@ -33,66 +34,60 @@ const Slide = () => {
 
       window.addEventListener('mousedown', mouseClickHandler)
       window.addEventListener('touchcancel', mouseClickHandler)
-
-      return () => {
-        window.removeEventListener('mousedown', mouseClickHandler)
-        window.removeEventListener('touchcancel', mouseClickHandler)
+    }
+    const handleMouse = (event: TouchEvent | MouseEvent) => {
+      if (event instanceof MouseEvent) {
+        setMousePos(event.x / window.innerWidth * 100)
+      } else if (event instanceof TouchEvent) {
+        setMousePos(event.touches[0].clientX / window.innerWidth * 100)
       }
     }
-    else {
-      const handleMouse = (event: TouchEvent | MouseEvent) => {
-        if (event instanceof MouseEvent) {
-          setMousePos(event.x / window.innerWidth * 100)
-        } else if (event instanceof TouchEvent) {
-          setMousePos(event.touches[0].clientX / window.innerWidth * 100)
-        }
-      }
 
-      window.addEventListener('mousemove', handleMouse)
-      window.addEventListener('touchmove', handleMouse)
+    window.addEventListener('mousemove', handleMouse)
+    window.addEventListener('touchmove', handleMouse)
 
-      return () => {
-        window.removeEventListener('mousemove', handleMouse)
-        window.removeEventListener('touchmove', handleMouse)
+    return () => {
+      window.removeEventListener('mousemove', handleMouse)
+      window.removeEventListener('touchmove', handleMouse)
+      if (isMobile) {
+        window.removeEventListener('mousedown', handleMouse)
+        window.removeEventListener('touchcancel', handleMouse)
       }
     }
   })
-  // change to less introspective note
-  // My name is Markus Svedenheim.
-  // I'm a young developer looking to contribute to
-  // I'm a young developer looking to explore software development
+
   return (
     <>
       {isMobile
         ? <>
-          <Curtain
-            color='#caf0f8'>
-            <TextPage color='#222'>
-              My name is Markus Svedenheim.
-              I'm a young developer looking to
-              <Fancy color={keyword === 'DEVELOP' ? '#8338EC' : '#FFBE0B'}>{keyword}</Fancy> my skills!
-            </TextPage>
-          </Curtain>
+          <AnimatePresence>
+            <Curtain
+              initial={{ width: '100%' }}
+              animate={{ width: `${Math.max(mousePos || 0, 2)}%` }}
+              transition={{ duration: 0.8 }}>
+            </Curtain>
+          </AnimatePresence>
+          <TextPage color='#dfdfdf'>
+            My name is Markus Svedenheim. <br />
+            I'm a fresh developer looking to <br />
+            <Fancy color={keyword === 'DEVELOP' ? '#61c9f2' : '#222'}>{keyword}</Fancy> my skills!
+          </TextPage>
         </>
         : <>
-          <Curtain
-            color='#03045e'>
-            <TextPage color='#eee'>
-              My name is Markus Svedenheim. <br />
-              I'm a young developer looking to <br />
-              <Fancy color='#90e0ef'>DEVELOP</Fancy> my skills!
-            </TextPage>
-          </Curtain>
+          <TextPage color='#222'>
+            My name is Markus Svedenheim. <br />
+            I'm a fresh developer looking to <br />
+            <Fancy color='#dfdfdf'>DEVELOP</Fancy> my skills!
+          </TextPage>
           <AnimatePresence>
             <Curtain
               initial={{ width: '100%' }}
               animate={{ width: `${Math.max(mousePos || 0, 40)}%` }}
-              transition={{ duration: mousePos ? 0.01 : 0.8 }}
-              color='#caf0f8'>
-              <TextPage color='#222'>
+              transition={{ duration: mousePos ? 0.01 : 0.8 }}>
+              <TextPage color='#dfdfdf'>
                 My name is Markus Svedenheim. <br />
-                I'm a young developer looking to <br />
-                <Fancy color='#0077b6'>UTILIZE</Fancy> my skills!
+                I'm a fresh developer looking to <br />
+                <Fancy color='#61c9f2'>UTILIZE</Fancy> my skills!
               </TextPage>
             </Curtain>
           </AnimatePresence>
@@ -101,30 +96,31 @@ const Slide = () => {
   )
 }
 
-const Curtain = styled(motion.div)`
-  position: absolute;
+const Curtain = styled(motion(RootContainer))`
+  box-shadow: 0 0 8px 1px black;
+  background-image: linear-gradient(5deg, #0006, #2226),
+                    var(--background);
 
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  background: ${props => props.color};
   overflow: hidden;
-
   z-index: 1;
+
+  @media screen and (max-width: 786px) {
+    background: linear-gradient(5deg, #0006, #2226);
+  }
 `
 
 const TextPage = styled.h1`
-  color: ${props => props.color};
+  position: absolute;
+  top: 15vh;
+  left: 45vw;
 
-  margin-top: 20vh;
-  margin-left: 55vw;
+  color: ${props => props.color};
 
   white-space: nowrap;
 
   font-family: 'Ubuntu', sans-serif;
-  font-size: 48px;
+  font-size: 2.4vw;
+  text-shadow: 0.1vw 0.1vw #444;
 
   font-weight: 300;
 
@@ -135,14 +131,13 @@ const TextPage = styled.h1`
     margin-left: auto;
 
     width: 80%;
-    margin-top: 16vh;
-    margin-left: 10%;
+    top: 16vh;
+    left: 10vw;
   }
 `
 
 const Fancy = styled.span`
   color: ${props => props.color};
-  margin-left: 4px;
 
   font-family: 'Source Code Pro', monospace;
 
@@ -241,15 +236,10 @@ const Menu = () => {
     }
   `
 
-  const MIH = styled.span`
-    color: #03045e;
-    font-style: italic;
-  `
-
   const menuItems = [
     {
       'name': 'Projects',
-      'color': '#ffbe0b',
+      'color': '#70848c',
       'content': (
         <motion.div style={{ margin: 16 }}
           initial={{ opacity: 0.2 }}
@@ -258,9 +248,9 @@ const Menu = () => {
           transition={{ duration: 0.2 }}>
           <MenuItemTitle>A slice of my work</MenuItemTitle>
           <MenuItemText>
-            My achievements in programming are molded by exploring <MIH>new ideas</MIH>!
+            My achievements in programming are molded by exploring new ideas!
             Everything between backend, frontend and game development.
-            As well as a dash of <MIH>computational molecular biology</MIH>.
+            As well as a dash of computational molecular biology.
           </MenuItemText>
           <Button text={'Projects'} icon={'➔'} callback={() => navigate('/projects')} />
         </motion.div>
@@ -268,7 +258,7 @@ const Menu = () => {
     },
     {
       'name': 'Contact',
-      'color': '#fb5607',
+      'color': '#73aabf',
       'content': (
         <motion.div style={{ margin: 16 }}
           initial={{ opacity: 0.2 }}
@@ -279,13 +269,13 @@ const Menu = () => {
           <MenuItemText>
             If you find my work and experience to be of interest, please feel free to reach out to me!
           </MenuItemText>
-          <Button text={'Find Me Here'} icon={'➔'} callback={() => navigate('/contact')} />
+          <Button text={'Contact Me'} icon={'➔'} callback={() => navigate('/contact')} />
         </motion.div>
       ),
     },
     {
       'name': 'About',
-      'color': '#ff006e',
+      'color': '#475459',
       'content': (
         <motion.div style={{ margin: 16 }}
           initial={{ opacity: 0.2 }}
@@ -295,22 +285,23 @@ const Menu = () => {
           <MenuItemTitle>Who am I?</MenuItemTitle>
           <MenuItemText>
             My entry into programming is grounded in my curious nature,
-            I have always loved both <MIH>exploration</MIH> and <MIH>problem solving</MIH>.
+            I have always loved both exploration and problem solving.
             In my opinion these are the core aspects of programming!
           </MenuItemText>
           <MenuItemTitle>What have I done?</MenuItemTitle>
           <MenuItemText>
             During my journey into the world of programming,
-            I have explored multiple <MIH>languages</MIH>, <MIH>libraries</MIH>, and <MIH>possibilities!</MIH>
+            I have explored multiple languages, libraries, and possibilities!
           </MenuItemText>
           <Button text={'Read More'} icon={'➔'} callback={() => navigate('/about')} />
         </motion.div>
       ),
     },
     {
-      // Wildcard is in development, final result is hopefully an actual wildcard randomly picking a fact
+      // Wildcard is in development
+      // Final result is hopefully an actual wildcard randomly picking a fact
       'name': 'Wildcard',
-      'color': '#8338ec',
+      'color': '#61c9f2',
       'content': (
         <motion.div style={{ margin: 16 }}
           initial={{ opacity: 0.2 }}
@@ -323,7 +314,7 @@ const Menu = () => {
             A computation molecular dynamics simulation aimed at simulating
             the folding process of an arbitrary protein from its amino acid sequence.
           </MenuItemText>
-          <MenuItemText><MIH>Local Small Scale Protein folding engine</MIH></MenuItemText>
+          <MenuItemText>Local Small Scale Protein folding engine</MenuItemText>
         </motion.div>
       ),
     },
@@ -357,6 +348,7 @@ const Menu = () => {
             rect={rect}
             name={menuItems[i].name}
             color={menuItems[i].color}
+            key={i}
           >
             {menuItems[i].content}
           </MenuItem>
@@ -371,6 +363,7 @@ const MenuContainer = styled.div`
 
   width: 40%;
   height: 100%;
+  bottom: 0;
 
   z-index: 1;
 
@@ -379,8 +372,6 @@ const MenuContainer = styled.div`
   @media screen and (max-width: 786px) {
     width: 100%;
     height: 64%;
-
-    bottom: 0;
   }
 `
 
@@ -411,9 +402,6 @@ interface MI {
 }
 
 const MenuItem: React.FC<MI> = ({ rect, name, color, children }) => {
-
-  // TODO: Width, Height is updated slower which causes bad looking shifts on fast clicking
-  // Maybe, idk tbh :/
 
   let controls = useAnimationControls()
   let [selected, setSelected] = useState<boolean>(false)
@@ -483,7 +471,7 @@ const MenuItem: React.FC<MI> = ({ rect, name, color, children }) => {
       onHoverStart={() => shake()}
       onAnimationComplete={() => setAnimating(false)}
     >
-      <MenuItemName animate={{ opacity: reveal ? 0.4 : 0.02 }}>{name}</MenuItemName>
+      <MenuItemName animate={{ opacity: reveal ? 0.4 : 0.08 }}>{name}</MenuItemName>
       <AnimatePresence>
         {reveal && children}
       </AnimatePresence>
@@ -492,18 +480,18 @@ const MenuItem: React.FC<MI> = ({ rect, name, color, children }) => {
 }
 
 const MenuItemWrapper = styled(motion.div)`
-
   position: absolute;
   overflow: hidden;
 
-  background-color: ${props => props.color};
+  background: ${props => props.color};
   border-radius: 16px;
+
+  box-shadow: inset 0 0 4px 2px #444;
 
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
 `
 
 const MenuItemName = styled(motion.h1)`
@@ -524,7 +512,6 @@ const MenuItemName = styled(motion.h1)`
   @media screen and (max-width: 786px) {
     font-size: 32px;
   }
-
 `
 
 

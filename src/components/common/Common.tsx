@@ -18,14 +18,20 @@ export const pageTransitions = {
 };
 
 export const RootContainer = styled.div`
-  position: fixed;
+  position: absolute;
 
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
 
   overflow-y: scroll;
 
-  background-color: #caf0f8;
+  --background: url('background.jpg');
+  background-image: var(--background);
+  background-position: right bottom;
+  background-attachment: fixed;
+  background-size: cover;
 `
 
 export const Container = styled.div`
@@ -62,7 +68,7 @@ export const Text = styled.p`
   text-align: center;
 `
 
-export const Margin = styled.div<{width?: number, height?: number}>`
+export const Margin = styled.div<{ width?: number, height?: number }>`
   width: ${props => props.width}px;
   height: ${props => props.height}px;
 `
