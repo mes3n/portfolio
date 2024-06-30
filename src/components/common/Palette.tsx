@@ -7,9 +7,9 @@ export const palette = {
     '#475459',
     '#70848c',
     '#73aabf',
-    '#61c9f2',
+    '#499dbd',
   ],
   gradient: {
-    dark: '#0006, #2226',
+    dark: '#8884, #2226, #0008',
   },
 }

@@ -41,7 +41,7 @@ export const Container = styled.div`
   align-items: center;
 
   min-height: 100%;
-  padding-top: 64px;  
+  padding: 64px 0;
   box-sizing: border-box;
 
   overflow-x: hidden;
