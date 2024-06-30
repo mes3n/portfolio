@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive'
 
 import { motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import Logo from '../common/Logo'
+import { palette } from '../common/Palette'
+
+import Logo from './Logo'
 
 const NavBar = () => {
   return (
@@ -23,18 +25,18 @@ const Nav = () => {
   })
 
   const navigate = useNavigate()
+  const location = useLocation()
   const ref = useRef<HTMLDivElement>(null)
 
-  let [active, setActive] = useState<string>(window.location.pathname.replaceAll('/', ''))
+  let [active, setActive] = useState<string>(location.pathname.replaceAll('/', ''))
   let [expand, setExpand] = useState<boolean>(false)
 
   useEffect(() => {
-    active !== window.location.pathname.replaceAll('/', '') &&
-      setActive(window.location.pathname.replaceAll('/', ''))
-  }, [active])
+    setActive(location.pathname.replaceAll('/', ''))
+  }, [location.pathname])
 
   useEffect(() => {
-    const onClick = ({target}: MouseEvent | TouchEvent) => {
+    const onClick = ({ target }: MouseEvent | TouchEvent) => {
       if (!ref.current?.contains(target as Node)) {
         setExpand(false)
       }
@@ -62,16 +64,15 @@ const Nav = () => {
             animate={{ transform: expand ? 'translate(50%, -30%)' : 'translate(150%, -70%)' }}>
             {links.map(link => <NavLink onClick={() => {
               navigate(link.link)
-              setActive(link.link)
             }} active={active === link.link}>{link.name}</NavLink>)}
           </HamburgerMenu>
           <Hamburger onClick={() => setExpand(!expand)} expand={expand} />
         </>
         : <>
-          {links.map((link) => <NavLink onClick={() => {
+          {links.map((link, i) => <NavLink onClick={() => {
             navigate(link.link)
             setActive(link.link)
-          }} active={active === link.link}>{link.name}</NavLink>)}
+          }} active={active === link.link} key={i}>{link.name}</NavLink>)}
         </>
       }
     </NavContainer>
@@ -83,30 +84,30 @@ const Hamburger: React.FC<{ onClick: Function, expand: boolean }> = ({ onClick, 
   const variants = {
     top: {
       opened: {
-        backgroundColor: '#eee',
+        backgroundColor: palette.light,
         transform: 'translate(0px, 8.5px)  rotate(-45deg)',
       },
       closed: {
-        backgroundColor: '#222',
+        backgroundColor: palette.dark,
       }
     },
     middle: {
       opened: {
-        backgroundColor: '#eee',
+        backgroundColor: palette.light,
         transform: 'translate(0px, -1px)  rotate(-45deg)',
         opacity: 0,
       },
       closed: {
-        backgroundColor: '#222',
+        backgroundColor: palette.dark,
       }
     },
     bottom: {
       opened: {
-        backgroundColor: '#eee',
+        backgroundColor: palette.light,
         transform: 'translate(0px, -8.5px) rotate(-135deg)',
       },
       closed: {
-        backgroundColor: '#222',
+        backgroundColor: palette.dark,
       }
     },
   }
@@ -139,7 +140,6 @@ const NavContainer = styled.div`
 
   margin-right: 1vw;
   justify-content: right;
-
 `
 
 const HambugerBun = styled.div`
@@ -157,15 +157,12 @@ const HambugerBun = styled.div`
 `
 
 const Slice = styled(motion.div)`
-    
   height: 3px;
   width: 28px;
 
   margin: 0 2px;
 
   border-radius: 1.5px;
-
-  background: '#222';
 `
 
 const HamburgerMenu = styled(motion.div)`
@@ -184,29 +181,47 @@ const HamburgerMenu = styled(motion.div)`
   box-sizing: border-box;
   padding: 64px;
 
-  box-shadow: -1px 1px 8px black;
+  box-shadow: 0 0 8px 1px black;
 
-  background: radial-gradient(circle, #0077b6, #0077b6);
+  background: radial-gradient(circle, ${palette.gray}, ${palette.dark});
 `
 
-const NavLink = styled.div<{ active: boolean }>`
-
-  background: ${(props) => props.active ? '#00b4d8' : ''};
-  color: ${(props) => props.active ? '#222' : '#00b4d8'};
+const NavLink = styled.div<{ active: boolean, hover?: boolean }>`
+  color: ${props => props.active ? palette.light : palette.dark};
   
   height: min-content;
+  margin-top: 4px;
   padding: 8px;
-  padding-top: 0;
-
-  border-bottom-right-radius: 32px;
+  padding-top: 4px;
+  border-radius: 16px;
 
   font-size: 32px;
   cursor: pointer;
 
-  @media screen and (max-width: 786px) {
-    background: ${(props) => props.active ? '#caf0f8' : ''};
-    color: ${(props) => props.active ? '#0077b6' : '#caf0f8'};
+  transition: 100ms;
+  &:hover {
+    translate: -1px -1px;
+  }
 
+  @media screen and (min-width: 786px) {
+    ${props => props.active
+    ? css`
+      background: linear-gradient(145deg, ${palette.gradient.dark});
+      text-shadow: 2px 2px black;
+      translate: -1px -1px;
+    `
+    : css`
+      text-shadow: 1px 1px ${palette.light};
+      &:hover {
+        translate: -1px -1px;
+        text-shadow: 2px 2px ${palette.light};
+      }
+    `}
+  }
+
+  @media screen and (max-width: 786px) {
+    background: ${props => props.active ? palette.blues[1] : 'none'};
+    color: ${props => props.active ? palette.dark : palette.light};
 
     padding: 4px;
     padding-top: 0;
@@ -215,7 +230,6 @@ const NavLink = styled.div<{ active: boolean }>`
     border-radius: 4px;
 
     margin-top: 1vw;
-
   }
 `
 

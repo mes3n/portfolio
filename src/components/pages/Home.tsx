@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Button from '../common/Button'
 import { RootContainer } from '../common/Common'
+import { palette } from '../common/Palette'
 
 const Home = () => {
 
@@ -67,27 +68,27 @@ const Slide = () => {
               transition={{ duration: 0.8 }}>
             </Curtain>
           </AnimatePresence>
-          <TextPage color='#dfdfdf'>
+          <TextPage color={palette.light}>
             My name is Markus Svedenheim. <br />
             I'm a fresh developer looking to <br />
-            <Fancy color={keyword === 'DEVELOP' ? '#61c9f2' : '#222'}>{keyword}</Fancy> my skills!
+            <Fancy color={keyword === 'DEVELOP' ? palette.blue : palette.dark}>{keyword}</Fancy> my skills!
           </TextPage>
         </>
         : <>
-          <TextPage color='#222'>
+          <TextPage color={palette.dark}>
             My name is Markus Svedenheim. <br />
             I'm a fresh developer looking to <br />
-            <Fancy color='#dfdfdf'>DEVELOP</Fancy> my skills!
+            <Fancy color={palette.light}>DEVELOP</Fancy> my skills!
           </TextPage>
           <AnimatePresence>
             <Curtain
               initial={{ width: '100%' }}
               animate={{ width: `${Math.max(mousePos || 0, 40)}%` }}
               transition={{ duration: mousePos ? 0.01 : 0.8 }}>
-              <TextPage color='#dfdfdf'>
+              <TextPage color={palette.light}>
                 My name is Markus Svedenheim. <br />
                 I'm a fresh developer looking to <br />
-                <Fancy color='#61c9f2'>UTILIZE</Fancy> my skills!
+                <Fancy color={palette.blue}>UTILIZE</Fancy> my skills!
               </TextPage>
             </Curtain>
           </AnimatePresence>
@@ -98,14 +99,14 @@ const Slide = () => {
 
 const Curtain = styled(motion(RootContainer))`
   box-shadow: 0 0 8px 1px black;
-  background-image: linear-gradient(5deg, #0006, #2226),
+  background-image: linear-gradient(5deg, ${palette.gradient.dark}),
                     var(--background);
 
   overflow: hidden;
   z-index: 1;
 
   @media screen and (max-width: 786px) {
-    background: linear-gradient(5deg, #0006, #2226);
+    background: linear-gradient(5deg, ${palette.gradient.dark});
   }
 `
 
@@ -120,7 +121,7 @@ const TextPage = styled.h1`
 
   font-family: 'Ubuntu', sans-serif;
   font-size: 2.4vw;
-  text-shadow: 0.1vw 0.1vw #444;
+  text-shadow: 0.1vw 0.1vw ${palette.gray};
 
   font-weight: 300;
 
@@ -239,7 +240,7 @@ const Menu = () => {
   const menuItems = [
     {
       'name': 'Projects',
-      'color': '#70848c',
+      'color': palette.blues[0],
       'content': (
         <motion.div style={{ margin: 16 }}
           initial={{ opacity: 0.2 }}
@@ -258,7 +259,7 @@ const Menu = () => {
     },
     {
       'name': 'Contact',
-      'color': '#73aabf',
+      'color': palette.blues[1],
       'content': (
         <motion.div style={{ margin: 16 }}
           initial={{ opacity: 0.2 }}
@@ -275,7 +276,7 @@ const Menu = () => {
     },
     {
       'name': 'About',
-      'color': '#475459',
+      'color': palette.blues[2],
       'content': (
         <motion.div style={{ margin: 16 }}
           initial={{ opacity: 0.2 }}
@@ -301,7 +302,7 @@ const Menu = () => {
       // Wildcard is in development
       // Final result is hopefully an actual wildcard randomly picking a fact
       'name': 'Wildcard',
-      'color': '#61c9f2',
+      'color': palette.blues[3],
       'content': (
         <motion.div style={{ margin: 16 }}
           initial={{ opacity: 0.2 }}
@@ -486,12 +487,14 @@ const MenuItemWrapper = styled(motion.div)`
   background: ${props => props.color};
   border-radius: 16px;
 
-  box-shadow: inset 0 0 4px 2px #444;
+  box-shadow: inset 0 0 4px 2px ${palette.gray};
 
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+
+  cursor: pointer;
 `
 
 const MenuItemName = styled(motion.h1)`
