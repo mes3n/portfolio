@@ -4,12 +4,14 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useMediaQuery } from 'react-responsive'
 
 import { Container, Margin, Title } from '../common/Common'
+import { palette } from '../common/Palette'
 
 const About = () => {
   return (
     <Container>
-      <Margin height={32} />
-      <Title>About Me</Title>
+      <Title style={{
+        textShadow: `4px 4px ${palette.dark}`
+      }}>About Me</Title>
       <Timeline />
     </Container>
   )
@@ -30,50 +32,73 @@ const Timeline = () => {
 
   const events = [  // add some sort of expandable list...
     {
-      title: 'Desktop',
-      text: 'I build my very own, and first, desktop. To which, I promptly installed Linux.',
+      title: 'It begins',
+      text: 'I get my first computer, custom built and with Linux.',
       date: Date.parse('2019-6-20'),
     },
     {
-      title: 'Hello World',
-      text: 'My very first computer program is written: print("Hello, World!)", in Python.',
+      title: 'Hello, World!',
+      text: 'Hello, World! My very first program.',
       date: Date.parse('2019-12-17'),
     },
     {
       title: 'Programming',
-      text: 'I develop my first game, Snake, in Python. Although heavily dependent on an online tutorial.',
+      text: 'I do something slightly more advanced; Snake 🐍 Ssss...',
       date: Date.parse('2020-4-5'),
     },
     {
       title: 'C/C++',
-      text: 'In order to expand my knowledge, I start developing with C/C++. My first project if a tic-tac-toe game.',
-      date: Date.parse('2021-5-16'),
+      text: 'After a bunch more minor projects, I delve into C/C++ with tic-tac-toe.',
+      date: Date.parse('2021-1-12'),
     },
     {
-      title: 'Calculator',
-      text: 'I decide to jailbreak my graphing calculator and program, in C, and install Space Invaders to it.',
+      title: 'Gymnasium',
+      text: 'I start highschool with a focus on natural sciences.',
+      date: Date.parse('2021-8-20'),
+    },
+    {
+      title: 'TI84 ce-t',
+      text: 'I develop a space invaders clone for my new calculator.',
       date: Date.parse('2021-9-10'),
     },
     {
-      title: '3d',
-      text: '3d has seemed impossible following my 2d programming, so I decide to try and program a voxel-based game with OpenGL in C++.',
+      title: 'GitHub',
+      text: 'My very first GitHub commit.',
+      date: Date.parse('2022-2-27'),
+    },
+    {
+      title: 'New dimension',
+      text: 'Curiosity gets to me and I start developing for 3D.',
       date: Date.parse('2022-7-15'),
     },
+    // {
+    //   title: 'Submarine',
+    //   text: 'Together with a friend, I start planning, designing and developing software for a homemade RC submarine.',
+    //   date: Date.parse('2022-5-20'),
+    // },
     {
-      title: 'Submarine',
-      text: 'Together with a friend, I start planning, designing and developing software for a homemade RC submarine.',
-      date: Date.parse('2022-5-20'),
-    },
-    {
-      title: 'front-end',
-      text: 'I decide to start learning about front-end development and try to build a prototype personal website.',
+      title: 'The wide world of web',
+      text: 'I move on to web development and React.',
       date: Date.parse('2022-12-13'),
     },
-    
-
+    {
+      title: 'LSSPro',
+      text: 'An incredibly fun project aiming to simulate protein folding in silico.',
+      date: Date.parse('2023-02-24'),
+    },
+    {
+      title: 'LiTH',
+      text: 'I begin my studies towards a master\'s degree in computer science.',
+      date: Date.parse('2023-08-15'),
+    },
+    {
+      title: 'Cellda',
+      text: 'Yet another scientific project, image detection this time.',
+      date: Date.parse('2023-12-20'),
+    },
     {
       title: 'Today',
-      text: 'I keep looking for ways to develop myself within programming and learn more about it!',
+      text: 'And life goes on. Hope you have a great day!',
       date: Date.now(),
     },
   ]
@@ -82,12 +107,13 @@ const Timeline = () => {
 
   const zero = events[0].date
   const max = Date.now()
-  const maxWidth = !isMobile ? 200 : 400  // in percent
+  const maxWidth = isMobile ? 400 : 200  // in percent
+  const maxScrollWidth = maxWidth - (isMobile ? 50 : 80)
   const delta = (max - zero) / maxWidth
 
   useEffect(() => {
     const handleMouseScroll = (event: WheelEvent) => {
-      setScrollX(clip(0, scrollX + event.deltaY * 0.2, maxWidth))
+      setScrollX(clip(0, scrollX + event.deltaY * 0.2, maxScrollWidth))
     }
 
     const handleTouchMove = (event: TouchEvent) => {
@@ -113,26 +139,28 @@ const Timeline = () => {
   return (
     <TlWrapper>
       <TlLine>
-        <LineEndArrow active={scrollX > 0} leftSide={true} callback={() => setScrollX(0)} />
-        {events.map((e, i) => {
-          const x = (e.date - zero) / delta - scrollX
-          return <AnimatePresence><Card rise={i % 2 === 0 ? 'true' : 'false'} initial={{ left: 0 }} animate={{  // TODO: add slower initial animation
-            scale: clip(0.0, Math.min(x, 100 - x) * 0.4 + 1, 1.0),
-            opacity: clip(0.0, Math.min(x, 100 - x) * 0.4 + 1, 1.0),
-            left: isMobile ? `calc(${x}% - 0px)` : `calc(${x}% - 0px)`,
-          }}>
-
-            <CardTitle>{e.title}</CardTitle>
-            <CardDate>{new Date(e.date).toLocaleDateString('sv-SE')}</CardDate>
-            <Margin height={16} />
-            <CardDescription>{e.text}</CardDescription>
-
-            <CardPoint rise={i % 2 === 0 ? 'true' : 'false'} />
-          </Card></AnimatePresence>
+        <LineEndArrow active={scrollX > 0} side='left' callback={() => setScrollX(0)} />
+        {events.map((event, i) => {
+          const x = (event.date - zero) / delta - scrollX
+          return <AnimatePresence key={i}>
+            <Card $rise={i % 2 === 0} initial={{ left: 0 }} animate={{  // TODO: add slower initial animation
+              opacity: clip(0.0, Math.min(x, 80 - x) * 0.4 + 1, 1.0),
+              left: isMobile ? `calc(${x}% - 0px)` : `calc(${x}% - 0px)`,
+            }}
+            >
+              <CardTitle>{event.title}</CardTitle>
+              <CardDate>
+                {new Date(event.date).toLocaleDateString('sv-SE')}
+              </CardDate>
+              <Margin height={16} />
+              <CardDescription>{event.text}</CardDescription>
+              <CardPoint $rise={i % 2 === 0} />
+            </Card>
+          </AnimatePresence >
         })}
-        <LineEndArrow active={scrollX < maxWidth} leftSide={false} callback={() => setScrollX(maxWidth)} />
-      </TlLine>
-    </TlWrapper>
+        <LineEndArrow active={scrollX < maxScrollWidth} side='right' callback={() => setScrollX(maxScrollWidth)} />
+      </TlLine >
+    </TlWrapper >
   )
 }
 
@@ -152,41 +180,34 @@ const TlLine = styled.div`
   height: 8px;
   width: 92%;
 
-  border-radius: 4px;
-
-  background: #222;
-
-  @media screen and (max-width: 786px) {
-    width: 92%;
-  }
+  background: ${palette.dark};
+  box-shadow: 0 0 4px ${palette.light};
 `
 
-const Card = styled(motion.div) <{ rise: string }>`
+const Card = styled(motion.div) <{ $rise: boolean }>`
   position: absolute;
-  
-  left: 0;
   
   height: 36vh;
   width: 20%;
 
-  background: #0077b6;
-  color: #caf0f8;
+  color: ${palette.light};
 
   border-radius: 16px;
   padding: 16px;
   box-sizing: border-box;
 
-  ${props => props.rise === 'true'
+  ${props => props.$rise
     ? css`
-      bottom: 20px;
+      bottom: 24px;
       border-bottom-left-radius: 0;
+      background: linear-gradient(225deg, ${palette.gradient.dark});
     `
     : css`
-      top: 20px;
+      top: 24px;
       border-top-left-radius: 0;
+      background: linear-gradient(325deg, ${palette.gradient.dark});
     `
   };
-
 
   @media screen and (max-width: 786px) {
     height: 30vh;
@@ -194,35 +215,36 @@ const Card = styled(motion.div) <{ rise: string }>`
   }
 `
 
-const CardPoint = styled.div<{ rise: string }>`
+const CardPoint = styled.div<{ $rise: boolean }>`
+  --size: 12px;
+  --aspect: 2;
+
   position: absolute;
 
   left: 0;
-  z-index: -1;
 
-  width: 22px;
-  height: 22px;
+  height: var(--size);
+  aspect-ratio: var(--aspect);
 
-  background: #0077b6;
+  background: #000c;
 
-  ${props => props.rise === 'true'
+  ${props => props.$rise
     ? css`
-      top: calc(100% - 11px);
-      border-bottom-left-radius: 50%;
-      border-bottom-right-radius: 50%;
+      top: calc(100%);
+      mask: radial-gradient(calc(var(--aspect)*var(--size)) var(--size) at 100% 100%, transparent 94%, #000 98%);
       `
     : css`
-      bottom: calc(100% - 11px);
-      border-top-left-radius: 50%;
-      border-top-right-radius: 50%;
+      mask: radial-gradient(calc(var(--aspect)*var(--size)) var(--size) at 100% 0, transparent 94%, #000 98%);
+      bottom: calc(100%);
     `
   };
-  
 `
 
 const CardTitle = styled.h1`
   font-family: 'Sora', sans-serif;
   font-size: 36px;
+
+  word-break: break-word;
 
   @media screen and (max-width: 786px) {
     font-size: 20px;
@@ -248,12 +270,11 @@ const CardDescription = styled.p`
   }
 `
 
-const LineEndArrow: React.FC<{ active: boolean, leftSide: boolean, callback: Function }> = ({ active, leftSide, callback }) => {
-
+const LineEndArrow: React.FC<{ active: boolean, side: 'left' | 'right', callback: Function }> = ({ active, side, callback }) => {
   const variants = {
     top: {
       active: {
-        transform: leftSide ? 'rotate(-45deg)' : 'rotate(-135deg)'
+        transform: side === 'left' ? 'rotate(-45deg)' : 'rotate(-135deg)'
       },
       inactive: {
         transform: 'rotate(-90deg)'
@@ -261,7 +282,7 @@ const LineEndArrow: React.FC<{ active: boolean, leftSide: boolean, callback: Fun
     },
     bottom: {
       active: {
-        transform: leftSide ? 'rotate(45deg)' : 'rotate(135deg)'
+        transform: side === 'left' ? 'rotate(45deg)' : 'rotate(135deg)'
       },
       inactive: {
         transform: 'rotate(90deg)'
@@ -271,19 +292,19 @@ const LineEndArrow: React.FC<{ active: boolean, leftSide: boolean, callback: Fun
   }
 
   return (
-    <HamburgerBun leftSide={leftSide} onClick={() => callback()}>
-      <Slice variants={variants.top} animate={active ? 'active' : 'inactive'} />
-      <Slice variants={variants.bottom} animate={active ? 'active' : 'inactive'} />
+    <HamburgerBun side={side} onClick={() => callback()}>
+      <Slice variants={variants.top} animate={active ? 'active' : 'inactive'} pos={'top ' + side} />
+      <Slice variants={variants.bottom} animate={active ? 'active' : 'inactive'} pos={'bottom ' + side} />
     </HamburgerBun>
   )
 }
 
-const HamburgerBun = styled.div<{ leftSide: boolean }>`
+const HamburgerBun = styled.div<{ side: 'left' | 'right' }>`
   position: absolute;
 
   top: -8px;
 
-  ${props => props.leftSide ? css`
+  ${props => props.side === 'left' ? css`
     left: -10px;
   ` : css`
     right: -14px;
@@ -299,15 +320,27 @@ const HamburgerBun = styled.div<{ leftSide: boolean }>`
   cursor: pointer;
 `
 
-const Slice = styled(motion.div)`
-    
+const Slice = styled(motion.div) <{ pos: string }>`
   height: 8px;
   width: 20px;
 
   border-radius: 4px;
 
-  background: #222;
-`
+  background: ${palette.dark};
 
+  ${props => {
+    switch (props.pos) {
+      case 'top left':
+      case 'top right':
+        return css`box-shadow: 0 0 4px ${palette.light};`
+      case 'bottom left':
+        return css`box-shadow: 1px 1px 0.9px ${palette.light};`
+      case 'bottom right':
+        return css`box-shadow: 1px -1px 0.9px ${palette.light};`
+      default:
+        return css`box-shadow: none;`
+    }
+  }}
+`
 
 export default About
