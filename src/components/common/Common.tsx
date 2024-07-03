@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { palette } from './Palette';
 
 export const pageTransitions = {
   initial: {
@@ -41,7 +42,7 @@ export const Container = styled.div`
   align-items: center;
 
   min-height: 100%;
-  padding: 64px 0;
+  padding-top: 64px;
   box-sizing: border-box;
 
   overflow-x: hidden;
@@ -50,11 +51,15 @@ export const Container = styled.div`
 export const Title = styled.h1`
   font-family: 'Sora', sans-serif;
   font-size: 64px;
+
+  color: ${palette.light};
 `
 
 export const Header = styled.h2`
   font-family: 'Ubuntu', sans-serif;
   font-size: 24px;
+
+  color: ${palette.light};
 
   font-weight: 500;
 
@@ -64,6 +69,8 @@ export const Header = styled.h2`
 export const Text = styled.p`
   font-family: 'Ubuntu', sans-serif;
   font-size: 20px;
+
+  color: ${palette.light};
 
   text-align: center;
 `

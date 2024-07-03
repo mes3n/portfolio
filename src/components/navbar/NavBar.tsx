@@ -62,9 +62,7 @@ const Nav = () => {
           <HamburgerMenu
             initial={{ transform: 'translate(150%, -70%)' }}
             animate={{ transform: expand ? 'translate(50%, -30%)' : 'translate(150%, -70%)' }}>
-            {links.map(link => <NavLink onClick={() => {
-              navigate(link.link)
-            }} active={active === link.link}>{link.name}</NavLink>)}
+            {links.map((link, i) => <NavLink onClick={() => { navigate(link.link) }} active={active === link.link} key={i}>{link.name}</NavLink>)}
           </HamburgerMenu>
           <Hamburger onClick={() => setExpand(!expand)} expand={expand} />
         </>
@@ -213,7 +211,6 @@ const NavLink = styled.div<{ active: boolean, hover?: boolean }>`
     : css`
       text-shadow: 1px 1px ${palette.light};
       &:hover {
-        translate: -1px -1px;
         text-shadow: 2px 2px ${palette.light};
       }
     `}

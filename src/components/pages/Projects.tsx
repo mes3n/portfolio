@@ -19,7 +19,7 @@ const Projects = () => {
   const projects: Array<ProjectType> = [
     {
       name: 'Submarine',
-      date: Date.parse('2024-12-14'),
+      date: Date.parse('2023-12-14'),
       description: 'Software for a homemade RC-submarine, with help from a friend.',
       languages: ['Dart', 'Flutter', 'C', 'Shell Script'],
       links: [
@@ -32,8 +32,8 @@ const Projects = () => {
     },
     {
       name: 'LSSPro',
-      date: Date.now(),
-      description: 'Local Small Scale Protein folding engine. See image for result...',
+      date: Date.parse('2023-02-24'),
+      description: 'Local Small Scale Protein folding engine. A research project with a friend.',
       languages: ['Python'],
       links: [{ link: 'https://github.com/mes3n/protein-folding', name: 'source' }, { link: 'protein_folding.pdf', name: 'research' }],
       image: 'protein.svg',
@@ -94,9 +94,9 @@ const Projects = () => {
     <Container>
       <ProjectContainer>
         <Margin height={32} />
-        <ProjectTitle>Projects</ProjectTitle>
+        <Title>Projects</Title>
         <Margin height={16} />
-        <ProjectHeader>A showcase of some of the more fun projects I have done, or am working on!</ProjectHeader>
+        <Header>A showcase of some of the more fun projects I have done, or am working on!</Header>
         <Margin height={64} />
         <AnimatePresence>
           <motion.div
@@ -112,14 +112,6 @@ const Projects = () => {
     </Container>
   )
 }
-
-const ProjectTitle = styled(Title)`
-  color: ${palette.light};
-`
-
-const ProjectHeader = styled(Header)`
-  color: ${palette.light};
-`
 
 interface ProjectTypeWithIndex extends ProjectType { index: number }
 const ProjectCard: React.FC<ProjectTypeWithIndex> = ({ name, date, description, languages, links, image, opacity, index }) => {
@@ -142,13 +134,15 @@ const ProjectCard: React.FC<ProjectTypeWithIndex> = ({ name, date, description, 
         <CardDescription>{description}</CardDescription>
       </CardInfo>
       <CardInfo>
-        <CardLangs>{languages?.map((lang, i) => lang + (i === languages.length - 1 ? '' : ', '))}</CardLangs>
+        <CardLangs>
+          {languages?.join(', ')}
+        </CardLangs>
         <CardLinks>
-          {links?.map(link => link.link.includes('https')
-            ? <CardLink href={link.link} target='_blank'>
+          {links?.map((link, i) => link.link.includes('https')
+            ? <CardLink href={link.link} target='_blank' key={i}>
               {link.name}
             </CardLink>
-            : <CardLink onClick={() => window.open(link.link)} target='_blank' style={{ textDecoration: 'underline' }}>
+            : <CardLink onClick={() => window.open(link.link)} target='_blank' style={{ textDecoration: 'underline' }} key={i}>
               {link.name}
             </CardLink>)}
         </CardLinks>
@@ -164,6 +158,7 @@ const ProjectContainer = styled.div`
 
   border-radius: 48px;
   box-shadow: 0 0 8px 1px ${palette.dark};
+  margin: 32px 0;
 
   width: 70%;
   background: linear-gradient(5deg, ${palette.gradient.dark});
@@ -224,6 +219,8 @@ const CardTitle = styled.h1`
 const CardDate = styled.p`
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
+
+  font-style: italic;
 
   @media screen and (max-width: 786px) {
     font-size: 10px;
