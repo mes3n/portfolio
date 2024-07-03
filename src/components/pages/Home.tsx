@@ -28,32 +28,29 @@ const Slide = () => {
   const [mousePos, setMousePos] = useState<number | null>(null)
 
   useEffect(() => {
-    if (isMobile) {
-      const mouseClickHandler = (_: MouseEvent | TouchEvent) => {
-        setKeyword(keyword === 'DEVELOP' ? 'UTILIZE' : 'DEVELOP')
-      }
-
-      window.addEventListener('mousedown', mouseClickHandler)
-      window.addEventListener('touchcancel', mouseClickHandler)
-    }
     const handleMouse = (event: TouchEvent | MouseEvent) => {
       if (event instanceof MouseEvent) {
         setMousePos(event.x / window.innerWidth * 100)
       } else if (event instanceof TouchEvent) {
         setMousePos(event.touches[0].clientX / window.innerWidth * 100)
       }
+
+      if (isMobile) {
+        setKeyword(keyword === 'DEVELOP' ? 'UTILIZE' : 'DEVELOP')
+      }
     }
 
-    window.addEventListener('mousemove', handleMouse)
-    window.addEventListener('touchmove', handleMouse)
+    type Actions = Array<'mousedown' | 'touchcancel' | 'mousemove' | 'touchmove'>
+    let actions: Actions = (() => {switch (isMobile) {
+      case true:
+        return ['mousedown', 'touchcancel']
+      case false:
+        return ['mousemove', 'touchmove']
+    }})()
 
+    actions.forEach(action => window.addEventListener(action, handleMouse))
     return () => {
-      window.removeEventListener('mousemove', handleMouse)
-      window.removeEventListener('touchmove', handleMouse)
-      if (isMobile) {
-        window.removeEventListener('mousedown', handleMouse)
-        window.removeEventListener('touchcancel', handleMouse)
-      }
+      actions.forEach(action => window.removeEventListener(action, handleMouse))
     }
   })
 
@@ -66,6 +63,7 @@ const Slide = () => {
               initial={{ width: '100%' }}
               animate={{ width: `${Math.max(mousePos || 0, 2)}%` }}
               transition={{ duration: 0.8 }}>
+              <CurtainBg />
             </Curtain>
           </AnimatePresence>
           <TextPage color={palette.light}>
@@ -85,6 +83,7 @@ const Slide = () => {
               initial={{ width: '100%' }}
               animate={{ width: `${Math.max(mousePos || 0, 40)}%` }}
               transition={{ duration: mousePos ? 0.01 : 0.8 }}>
+              <CurtainBg />
               <TextPage color={palette.light}>
                 My name is Markus Svedenheim. <br />
                 I'm a fresh developer looking to <br />
@@ -97,17 +96,33 @@ const Slide = () => {
   )
 }
 
-const Curtain = styled(motion(RootContainer))`
+const CurtainBg = styled(motion(RootContainer))`
   box-shadow: 0 0 8px 1px black;
+  filter: blur(2px);
   background-image: linear-gradient(5deg, ${palette.gradient.dark}),
                     var(--background);
 
+  @media screen and (max-width: 786px) {
+    background-image: linear-gradient(5deg, ${palette.gradient.dark});
+    opacity: 0;
+
+  }
+`
+
+const Curtain = styled(motion.div)`
+  position: absolute;
+
+  background-image: linear-gradient(5deg, ${palette.gradient.dark});
+
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  box-shadow: 0 0 8px 1px black;
+
   overflow: hidden;
   z-index: 1;
-
-  @media screen and (max-width: 786px) {
-    background: linear-gradient(5deg, ${palette.gradient.dark});
-  }
 `
 
 const TextPage = styled.h1`
