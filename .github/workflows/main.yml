@@ -41,7 +41,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         source: "build"
-        target: "/var/www/markus"
+        target: ${{ secrets.TARGET }}
         strip_components: 1
         rm: true
 
