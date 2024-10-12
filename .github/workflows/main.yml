@@ -31,19 +31,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+    - name: checkout
+      uses: actions/checkout@v4
     - uses: actions/download-artifact@master
       with:
         name: build-artifact
         path: build 
     - name: Deploy with SCP
-      uses: appleboy/scp-action@v0.1.7
+      uses: ./.github/actions/scp-deploy
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
+        target: ${{ secrets.HOST }}
+        user: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "build"
-        target: ${{ secrets.TARGET }}
-        strip_components: 1
-        rm: true
+        host-path: 'build'
+        target-dest: ${{ secrets.TARGET }}
+        replace: true
 

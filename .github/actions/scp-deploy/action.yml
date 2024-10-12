@@ -1,0 +1,37 @@
+name: SCP Deploy
+description: Deploy host files to target with SSH
+inputs:
+  target:
+    description: Address to target.
+    required: true
+  port:
+    description: Target port used for SSH.
+    default: 22
+  user:
+    description: User on SSH server.
+    required: true
+  password:
+    description: Password for user.
+  host-path:
+    description: Path to install from host.
+    required: true
+  target-dest:
+    description: Path to install to on target.
+    required: true
+  replace:
+    description: | 
+      Replace the targets path with new host path.
+      Any value counts as truthy.
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - user=${{ inputs.user }}
+    - target=${{ inputs.target }}
+    - host_path=${{ inputs.host-path }}
+    - target_dest=${{ inputs.target-dest }}
+    - port=${{ inputs.port }}
+    - password=${{ inputs.password }}
+    - replace=${{ inputs.replace }}
+
